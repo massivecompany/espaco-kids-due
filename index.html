@@ -23,20 +23,27 @@
         }
         header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .logo-pizzaria {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 50%;
         }
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: #ff9800;
+            margin-bottom: 4px;
         }
         header p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #aaaaaa;
         }
         .grid-cameras {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
             width: 100%;
             max-width: 800px;
         }
@@ -47,6 +54,8 @@
             border-radius: 8px;
             overflow: hidden;
             aspect-ratio: 16/9;
+            cursor: pointer;
+            transition: transform 0.2s ease;
         }
         .camera-box img {
             width: 100%;
@@ -58,50 +67,89 @@
             bottom: 5px;
             left: 5px;
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 2px 8px;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #fff;
+            font-weight: bold;
+            z-index: 10;
         }
+        
+        /* --- ESTILO PARA A TELA CHEIA (ZOOM) --- */
+        .camera-box.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            z-index: 9999;
+            border: none;
+            border-radius: 0;
+            aspect-ratio: auto;
+        }
+        .camera-box.fullscreen img {
+            object-fit: contain; /* Mantém a proporção da câmera sem cortar as bordas */
+            background-color: #000;
+        }
+
         footer {
-            margin-top: 15px;
-            font-size: 0.7rem;
+            margin-top: 25px;
+            font-size: 0.75rem;
             color: #555;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
     <header>
+        <img src="logo.png" alt="Logo Pizzaria" class="logo-pizzaria">
         <h1>DUE - Espaço Kids</h1>
-        <p>Acompanhe seu filho em tempo real</p>
+        <p>Toque na câmera para ampliar</p>
     </header>
 
     <div class="grid-cameras">
-        <div class="camera-box">
+        <div class="camera-box" onclick="toggleFullscreen(this)">
             <img src="http://192.168.0.176:80/cgi-bin/snapshot.cgi?channel=1&u=cliente&p=Due@kids" alt="Câmera 1" onload="setTimeout(this.src=this.src.split('?')[0]+'?channel=1&u=cliente&p=Due@kids&t='+Math.random(), 1000)">
-            <div class="camera-label">CAMPINHO (Canal 1)</div>
+            <div class="camera-label">Campinho</div>
         </div>
 
-        <div class="camera-box">
+        <div class="camera-box" onclick="toggleFullscreen(this)">
             <img src="http://192.168.0.176:80/cgi-bin/snapshot.cgi?channel=2&u=cliente&p=Due@kids" alt="Câmera 2" onload="setTimeout(this.src=this.src.split('?')[0]+'?channel=2&u=cliente&p=Due@kids&t='+Math.random(), 1000)">
-            <div class="camera-label">ACESSO ESCADA (Canal 2)</div>
+            <div class="camera-label">Escada</div>
         </div>
 
-        <div class="camera-box">
+        <div class="camera-box" onclick="toggleFullscreen(this)">
             <img src="http://192.168.0.176:80/cgi-bin/snapshot.cgi?channel=3&u=cliente&p=Due@kids" alt="Câmera 3" onload="setTimeout(this.src=this.src.split('?')[0]+'?channel=3&u=cliente&p=Due@kids&t='+Math.random(), 1000)">
-            <div class="camera-label">ENTRADA (Canal 3)</div>
+            <div class="camera-label">Entrada</div>
         </div>
 
-        <div class="camera-box">
+        <div class="camera-box" onclick="toggleFullscreen(this)">
             <img src="http://192.168.0.176:80/cgi-bin/snapshot.cgi?channel=4&u=cliente&p=Due@kids" alt="Câmera 4" onload="setTimeout(this.src=this.src.split('?')[0]+'?channel=4&u=cliente&p=Due@kids&t='+Math.random(), 1000)">
-            <div class="camera-label">AREA PARA BEBES (Canal 4)</div>
+            <div class="camera-label">Area de bebes</div>
         </div>
     </div>
 
     <footer>
-        <p>Desenvolvido por Massive Company LTDA - Acesso restrito à rede Wi-Fi local</p>
+        <p>Desenvolvido por Massive Access <br> Acesso restrito à rede Wi-Fi local</p>
     </footer>
+
+    <script>
+        function toggleFullscreen(elemento) {
+            // Se a câmera clicada já estiver em tela cheia, remove o efeito
+            if (elemento.classList.contains('fullscreen')) {
+                elemento.classList.remove('fullscreen');
+            } else {
+                // Remove de qualquer outra que esteja aberta antes (garantia)
+                document.querySelectorAll('.camera-box').forEach(box => {
+                    box.classList.remove('fullscreen');
+                });
+                // Aplica a tela cheia na câmera clicada
+                elemento.classList.add('fullscreen');
+            }
+        }
+    </script>
 
 </body>
 </html>
